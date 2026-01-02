@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: #0E0E11;
+  /* Hyfen Dark */
+  --color-foreground: #FFFFFF;
+  --font-sans: var(--font-inter);
+  /* Usar Inter */
+
+  /* Hyfen Palette */
+  --color-card: #1C1C22;
+  --color-badge: #262630;
+  --color-success: #22C55E;
+  /* Official Green */
+  --color-brand-start: #6D5DF6;
+  /* Official Purple */
+  --color-brand-end: #3B82F6;
+  /* Official Blue */
+}
+
+@layer utilities {
+  .bg-brand-gradient {
+    @apply bg-gradient-to-r from-[var(--color-brand-start)] to-[var(--color-brand-end)];
+  }
+}
+
+
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
