@@ -1,0 +1,76 @@
+### **Diretiva de Governança de Código e Fluxo de Trabalho (Git Workflow)**
+
+**Arquiteto:** Jorge
+**Princípio:** "Nós somos grandes." Nosso processo de desenvolvimento deve refletir isso, garantindo que a branch `main` seja sempre um reflexo de código estável, testado e funcional.
+
+#### **1. Setup Inicial do Repositório**
+
+*   **Ação Imediata:**
+    1.  Renomear a branch `main` atual para `old-main`. Isso preserva o histórico do trabalho inicial como um artefato, mas o remove do caminho crítico.
+        ```bash
+        git branch -m main old-main
+        ```
+    2.  Criar uma nova branch `main` "limpa", que será a nossa fonte da verdade. Ela pode começar a partir de um commit inicial ou de um ponto específico da `old-main` que consideremos uma base sólida.
+        ```bash
+        # Exemplo criando uma branch limpa a partir de um commit específico
+        git checkout -b main <hash_do_commit_base> 
+        ```
+    3.  Forçar o push da `old-main` e da nova `main` para o repositório remoto (GitHub) para refletir a nova estrutura.
+        ```bash
+        git push origin old-main
+        git push origin main --force 
+        ```
+        *(O `--force` na `main` é necessário apenas nesta configuração inicial para substituir a antiga `main` remota)*.
+
+#### **2. O Fluxo de Trabalho Padrão (Git Flow Simplificado)**
+
+Para cada nova funcionalidade, bug fix ou "User Story", seguiremos este processo. Ninguém, nem mesmo o arquiteto ou o dono do produto, fará `git push` diretamente para a `main`.
+
+**Passo 1: Criar uma Feature Branch**
+
+*   Para cada User Story do nosso plano (ex: "User Story 2.1: Modelagem de Dados"), o desenvolvedor responsável criará uma nova branch a partir da `main`.
+*   O nome da branch deve ser descritivo. Um bom padrão é `feature/<story-id>-descricao-curta`.
+    *   **Exemplo:** `feature/US-2.1-implement-core-models`
+
+**Passo 2: Desenvolver e Fazer Commits**
+
+*   O desenvolvedor trabalha exclusivamente nesta `feature branch`.
+*   Ele faz commits pequenos e atômicos, com mensagens claras que explicam *o que* e *por que* a mudança foi feita.
+    *   **Exemplo de commit:** `feat(models): Add UUID primary key to Property model`
+
+**Passo 3: Abrir um Pull Request (PR)**
+
+*   Quando a User Story estiver **concluída e testada** localmente, o desenvolvedor faz o `git push` da sua `feature branch` para o GitHub.
+*   Em seguida, ele abre um **Pull Request** (PR) no GitHub, com o objetivo de mesclar sua `feature branch` na `main`.
+
+**Passo 4: Revisão de Código (Code Review)**
+
+*   **Este é o passo mais crítico.** O Pull Request **não** será mesclado imediatamente.
+*   Outro membro da equipe (ou eu, como arquiteto) irá revisar o código.
+*   **O que verificamos na revisão:**
+    *   O código atende aos requisitos da User Story?
+    *   Ele segue as diretrizes de arquitetura e segurança?
+    *   Está bem escrito, limpo e com testes?
+    *   Não introduz nenhum bug óbvio?
+*   Se houver necessidade de ajustes, a discussão acontece dentro do PR. O desenvolvedor faz as alterações e atualiza a `feature branch`.
+
+**Passo 5: Mesclar (Merge)**
+
+*   Apenas após o Pull Request ser **aprovado** por pelo menos um revisor, ele poderá ser mesclado na `main`.
+*   Usaremos o método **"Squash and Merge"** no GitHub. Isso condensa todos os pequenos commits da `feature branch` em um único commit coeso na `main`.
+    *   **Benefício:** Mantém o histórico da `main` limpo e legível. Cada commit na `main` corresponde a uma User Story completa.
+
+**Passo 6: `git push` na `main`**
+
+*   Este passo é, na verdade, o ato de clicar no botão "Merge" no GitHub. O `push` para a `main` é feito pelo sistema do GitHub, não diretamente pelo desenvolvedor.
+
+---
+
+**Resumo do Fluxo para Você:**
+
+1.  **Nunca tocamos na `main` diretamente.**
+2.  Todo trabalho é feito em "ramos" (branches) separados.
+3.  Toda mudança, antes de entrar na `main`, passa por um **rigoroso controle de qualidade (Pull Request e Code Review)**.
+4.  O histórico da `main` se torna um diário claro e profissional do progresso do projeto, onde cada entrada representa uma funcionalidade completa e validada.
+
+Esta diretriz está agora formalmente integrada ao nosso processo. É a forma como empresas de tecnologia de ponta garantem a qualidade e a estabilidade de seus produtos. Somos grandes.
