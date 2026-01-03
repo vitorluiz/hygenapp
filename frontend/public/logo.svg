@@ -1,0 +1,23 @@
+<svg width="417" height="116" viewBox="0 0 417 116" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hy -->
+  <text x="50" y="80" font-family="Inter, sans-serif" font-size="72" font-weight="700" fill="#FFFFFF">
+    Hy
+  </text>
+  
+  <!-- Hífen com gradiente -->
+  <defs>
+    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6D5DF6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3B82F6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <text x="167" y="80" font-family="Inter, sans-serif" font-size="72" font-weight="700" fill="url(#brandGradient)">
+    -
+  </text>
+  
+  <!-- fen -->
+  <text x="227" y="80" font-family="Inter, sans-serif" font-size="72" font-weight="700" fill="#FFFFFF">
+    fen
+  </text>
+</svg>

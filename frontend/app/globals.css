@@ -6,26 +6,40 @@
 }
 
 @theme inline {
+  /* Backgrounds - Cores Base */
   --color-background: #0E0E11;
-  /* Hyfen Dark */
-  --color-foreground: #FFFFFF;
-  --font-sans: var(--font-inter);
-  /* Usar Inter */
-
-  /* Hyfen Palette */
+  /* Background Principal */
   --color-card: #1C1C22;
-  --color-badge: #262630;
+  /* Background Secundário (Cards) */
+
+  /* Textos */
+  --color-foreground: #FFFFFF;
+  /* Texto Principal */
+  --color-text-secondary: #A1A1AA;
+  /* Texto Secundário */
+
+  /* Gradiente de Marca (Identidade) */
+  --color-brand-purple: #6D5DF6;
+  /* Roxo */
+  --color-brand-blue: #3B82F6;
+  /* Azul */
+
+  /* Cor de Sucesso (Acento) */
   --color-success: #22C55E;
-  /* Official Green */
-  --color-brand-start: #6D5DF6;
-  /* Official Purple */
-  --color-brand-end: #3B82F6;
-  /* Official Blue */
+  /* Verde Sucesso */
+
+  /* Tipografia */
+  --font-sans: var(--font-inter);
+  /* Inter (Google Fonts) */
 }
 
 @layer utilities {
   .bg-brand-gradient {
-    @apply bg-gradient-to-r from-[var(--color-brand-start)] to-[var(--color-brand-end)];
+    @apply bg-gradient-to-r from-brand-purple to-brand-blue;
+  }
+
+  .text-brand-gradient {
+    @apply bg-gradient-to-r from-brand-purple to-brand-blue bg-clip-text text-transparent;
   }
 }
 

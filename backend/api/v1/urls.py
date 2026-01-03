@@ -10,6 +10,14 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 from apps.subscriptions.views import SaaSStatsView, SaaSClientsView
+from apps.accounts.views import (
+    UserRegistrationView,
+    VerifyEmailView,
+    SetPasswordView,
+    CreateTenantView,
+    PasswordResetRequestView,
+    PasswordResetConfirmView
+)
 
 # Router para ViewSets futuros
 router = DefaultRouter()
@@ -38,6 +46,16 @@ urlpatterns = [
     path('auth/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    
+    # Registro e verificação de usuário
+    path('auth/register/', UserRegistrationView.as_view(), name='user-register'),
+    path('auth/verify-email/', VerifyEmailView.as_view(), name='verify-email'),
+    path('auth/set-password/', SetPasswordView.as_view(), name='set-password'),
+    path('auth/create-tenant/', CreateTenantView.as_view(), name='create-tenant'),
+    
+    # Recuperação de senha
+    path('auth/password-reset/', PasswordResetRequestView.as_view(), name='password-reset'),
+    path('auth/password-reset/confirm/', PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
 
     # SaaS Admin API
     path('saas/stats/', SaaSStatsView.as_view(), name='saas-stats'),
