@@ -1,0 +1,102 @@
+site_name: Hyfen - Sistema de Gestão de Hospedagens
+site_description: Documentação completa do sistema Hyfen para gestão de pousadas, hotéis e casas de temporada
+site_author: Vitor Luiz
+site_url: https://github.com/vitorluiz/hyfenapp
+
+# Repository
+repo_name: vitorluiz/hyfenapp
+repo_url: https://github.com/vitorluiz/hyfenapp
+edit_uri: edit/main/docs/
+
+# Theme
+theme:
+  name: material
+  language: pt-BR
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: purple
+      toggle:
+        icon: material/brightness-7
+        name: Modo escuro
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: purple
+      toggle:
+        icon: material/brightness-4
+        name: Modo claro
+  
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+  icon:
+    repo: fontawesome/brands/github
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+# Navigation
+nav:
+  - Início: index.md
+  - Visão Geral:
+      - Sobre o Projeto: overview/about.md
+      - Arquitetura: overview/architecture.md
+      - Tecnologias: overview/tech-stack.md
+  - Guias:
+      - Instalação: guides/installation.md
+      - Configuração: guides/configuration.md
+      - Deploy: guides/deployment.md
+  - API:
+      - Autenticação: api/authentication.md
+      - Propriedades: api/properties.md
+      - Acomodações: api/accommodations.md
+      - Reservas: api/bookings.md
+  - Frontend:
+      - Estrutura: frontend/structure.md
+      - Componentes: frontend/components.md
+      - Rotas: frontend/routes.md
+  - Desenvolvimento:
+      - Ambiente Local: development/local-setup.md
+      - Git Workflow: development/git-workflow.md
+      - Testes: development/testing.md
+  - Sprints:
+      - Sprint 1: sprints/sprint-1.md
+      - Sprint 2: sprints/sprint-2.md
+
+# Plugins
+plugins:
+  - search:
+      lang: pt
+
+# Extra
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/vitorluiz/hyfenapp
