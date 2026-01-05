@@ -54,6 +54,25 @@ export default function NewPropertyPage() {
 
             if (!response.ok) {
                 const data = await response.json();
+
+                // Formatar erros de validação
+                if (data && typeof data === 'object') {
+                    const errorMessages = Object.entries(data).map(([field, errors]) => {
+                        const fieldNames: Record<string, string> = {
+                            'name': 'Nome',
+                            'address': 'Endereço',
+                            'city': 'Cidade',
+                            'state': 'Estado',
+                            'zip_code': 'CEP',
+                            'country': 'País',
+                        };
+                        const fieldName = fieldNames[field] || field;
+                        const errorList = Array.isArray(errors) ? errors : [errors];
+                        return `${fieldName}: ${errorList.join(', ')}`;
+                    });
+                    throw new Error(errorMessages.join('\n'));
+                }
+
                 throw new Error(data.detail || 'Erro ao criar propriedade');
             }
 
@@ -100,7 +119,7 @@ export default function NewPropertyPage() {
                             <svg className="w-5 h-5 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 8V12M12 16H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
-                            <span>{error}</span>
+                            <div className="whitespace-pre-line">{error}</div>
                         </div>
                     )}
 
@@ -285,16 +304,18 @@ export default function NewPropertyPage() {
 
                             <div>
                                 <label htmlFor="zip_code" className="block text-sm font-medium mb-2">
-                                    CEP
+                                    CEP *
                                 </label>
                                 <input
                                     id="zip_code"
                                     name="zip_code"
                                     type="text"
+                                    required
                                     value={formData.zip_code}
                                     onChange={handleChange}
                                     className="w-full px-4 py-2.5 rounded-lg bg-surface border border-border focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
                                     placeholder="00000-000"
+                                    maxLength={9}
                                 />
                             </div>
                         </div>
