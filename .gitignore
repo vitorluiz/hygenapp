@@ -4,6 +4,8 @@
 backend/.env
 frontend/.env.local
 
+Hyfen/*
+
 # Python
 __pycache__/
 *.py[cod]
