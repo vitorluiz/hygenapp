@@ -45,11 +45,16 @@ class PropertyViewSet(viewsets.ModelViewSet):
         return PropertyDetailSerializer
     
     def get_queryset(self):
-        """Retorna apenas propriedades do usuário autenticado"""
+        """
+        Retorna apenas propriedades que o usuário tem acesso via PropertyAccess.
+        Filtra por registros de acesso (OWNER ou MANAGER).
+        """
+        user = self.request.user
+        
+        # Filtra propriedades onde o usuário tem registro em PropertyAccess
         return Property.objects.filter(
-            owner=self.request.user,
-            is_active=True
-        ).select_related('owner').prefetch_related('accommodations', 'images').order_by('-created_at')
+            accesses__user=user
+        ).distinct().prefetch_related('images')
     
     def perform_create(self, serializer):
         """Associa a propriedade ao usuário autenticado"""

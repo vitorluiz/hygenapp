@@ -209,3 +209,47 @@ class Image(models.Model):
         elif self.accommodation:
             return f"Imagem de {self.accommodation.name}"
         return f"Imagem {self.id}"
+
+
+class PropertyAccess(models.Model):
+    """
+    Controla o acesso de usuários a propriedades com papéis específicos.
+    Permite que proprietários deleguem gestão a funcionários.
+    """
+    
+    class Role(models.TextChoices):
+        OWNER = 'OWNER', 'Proprietário'
+        MANAGER = 'MANAGER', 'Gerente'
+        # Futuros: RECEPTIONIST, STAFF, etc.
+    
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='property_accesses',
+        verbose_name='Usuário'
+    )
+    property = models.ForeignKey(
+        Property,
+        on_delete=models.CASCADE,
+        related_name='accesses',
+        verbose_name='Propriedade'
+    )
+    role = models.CharField(
+        max_length=20,
+        choices=Role.choices,
+        default=Role.MANAGER,
+        verbose_name='Papel'
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
+    
+    class Meta:
+        db_table = 'property_accesses'
+        verbose_name = 'Acesso à Propriedade'
+        verbose_name_plural = 'Acessos às Propriedades'
+        unique_together = [['user', 'property']]
+        indexes = [
+            models.Index(fields=['user', 'property']),
+        ]
+    
+    def __str__(self):
+        return f"{self.user.email} - {self.property.name} ({self.get_role_display()})"

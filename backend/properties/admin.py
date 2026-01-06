@@ -3,6 +3,7 @@ Admin configuration for properties app.
 """
 from django.contrib import admin
 from .models import Property, Accommodation
+from .models import Property, Accommodation, Image, PropertyAccess
 
 
 class AccommodationInline(admin.TabularInline):
@@ -16,9 +17,9 @@ class AccommodationInline(admin.TabularInline):
 class PropertyAdmin(admin.ModelAdmin):
     """Admin for Property model."""
     
-    list_display = ["name", "owner", "city", "state", "is_active", "created_at"]
-    list_filter = ["is_active", "state", "country", "created_at"]
-    search_fields = ["name", "city", "state", "owner__username", "owner__email"]
+    list_display = ['name', 'city', 'state', 'owner', 'is_active', 'created_at']
+    list_filter = ['is_active', 'state', 'created_at']
+    search_fields = ['name', 'city', 'owner__email']
     ordering = ["-created_at"]
     inlines = [AccommodationInline]
     
