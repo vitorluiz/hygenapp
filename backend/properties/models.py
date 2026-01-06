@@ -49,6 +49,10 @@ class Property(models.Model):
     tiktok = models.CharField(max_length=100, blank=True, verbose_name="TikTok")
     whatsapp = models.CharField(max_length=20, blank=True, verbose_name="WhatsApp")
     
+    # Customization
+    logo = models.ImageField(upload_to='logos/', blank=True, null=True, verbose_name="Logo")
+    primary_color = models.CharField(max_length=7, blank=True, default="#6366f1", verbose_name="Cor Primária")
+    
     # Soft delete
     is_active = models.BooleanField(default=True, verbose_name="Ativo")
     deleted_at = models.DateTimeField(null=True, blank=True, verbose_name="Deletado em")
@@ -160,3 +164,48 @@ class Accommodation(models.Model):
         self.is_active = False
         self.deleted_at = timezone.now()
         self.save()
+
+
+class Image(models.Model):
+    """Model for property and accommodation images."""
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    
+    # Relacionamentos (um dos dois deve estar preenchido)
+    property = models.ForeignKey(
+        Property,
+        on_delete=models.CASCADE,
+        related_name="images",
+        null=True,
+        blank=True,
+        verbose_name="Propriedade"
+    )
+    accommodation = models.ForeignKey(
+        Accommodation,
+        on_delete=models.CASCADE,
+        related_name="images",
+        null=True,
+        blank=True,
+        verbose_name="Acomodação"
+    )
+    
+    # Image file
+    image = models.ImageField(upload_to='properties/%Y/%m/', verbose_name="Imagem")
+    caption = models.CharField(max_length=200, blank=True, verbose_name="Legenda")
+    order = models.PositiveIntegerField(default=0, verbose_name="Ordem")
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Criado em")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Atualizado em")
+    
+    class Meta:
+        verbose_name = "Imagem"
+        verbose_name_plural = "Imagens"
+        ordering = ['order', '-created_at']
+    
+    def __str__(self):
+        if self.property:
+            return f"Imagem de {self.property.name}"
+        elif self.accommodation:
+            return f"Imagem de {self.accommodation.name}"
+        return f"Imagem {self.id}"
