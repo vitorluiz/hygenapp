@@ -3,7 +3,9 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.db import models
+from django.db.models import Func
 from django.utils import timezone
+from django.db.models.functions import Lower
 from .models import Property, Accommodation, Image
 from .serializers import (
     PropertyListSerializer,
@@ -65,6 +67,10 @@ class PropertyViewSet(viewsets.ModelViewSet):
         instance.soft_delete()
 
 
+
+class Unaccent(Func):
+    function = 'UNACCENT'
+
 class PropertyPublicListView(generics.ListAPIView):
     """
     Lista pública de todas as propriedades ativas no marketplace.
@@ -76,13 +82,23 @@ class PropertyPublicListView(generics.ListAPIView):
     """
     serializer_class = PropertyPublicSerializer
     permission_classes = [AllowAny]
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['name', 'city']
+    # filter_backends = [filters.SearchFilter] # Removido para usar lógica customizada com Unaccent
+    # search_fields = ['name', 'city']
     
     def get_queryset(self):
-        return Property.objects.filter(
-            is_active=True
-        ).select_related('owner').prefetch_related('images').order_by('-created_at')
+        queryset = Property.objects.filter(is_active=True).select_related('owner').prefetch_related('images').order_by('-created_at')
+        
+        search_term = self.request.query_params.get('search', None)
+        if search_term:
+            queryset = queryset.annotate(
+                name_unaccent=Unaccent(Lower('name')),
+                city_unaccent=Unaccent(Lower('city'))
+            ).filter(
+                models.Q(name_unaccent__icontains=Unaccent(Lower(models.Value(search_term)))) |
+                models.Q(city_unaccent__icontains=Unaccent(Lower(models.Value(search_term))))
+            )
+            
+        return queryset
 
 
 class PropertyPublicView(generics.RetrieveAPIView):
