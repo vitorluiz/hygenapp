@@ -1,4 +1,4 @@
-from rest_framework import viewsets, generics, permissions, status
+from rest_framework import viewsets, generics, permissions, status, filters
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -63,6 +63,26 @@ class PropertyViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         """Soft delete da propriedade"""
         instance.soft_delete()
+
+
+class PropertyPublicListView(generics.ListAPIView):
+    """
+    Lista pública de todas as propriedades ativas no marketplace.
+    
+    **Permissões:** Nenhuma (Público)
+    
+    **Filtros:**
+    - `search`: Busca por nome ou cidade
+    """
+    serializer_class = PropertyPublicSerializer
+    permission_classes = [AllowAny]
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'city']
+    
+    def get_queryset(self):
+        return Property.objects.filter(
+            is_active=True
+        ).select_related('owner').prefetch_related('images').order_by('-created_at')
 
 
 class PropertyPublicView(generics.RetrieveAPIView):

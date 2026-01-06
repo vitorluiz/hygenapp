@@ -86,7 +86,7 @@ class PropertyPublicSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Property
-        fields = ['id', 'name', 'description', 'address', 'city', 'state', 
+        fields = ['id', 'name', 'slug', 'description', 'address', 'city', 'state', 
                   'country', 'phone', 'website', 'accommodations_count', 
                   'logo', 'primary_color', 'images', 'instagram', 'facebook',
                   'youtube', 'tiktok', 'whatsapp']
