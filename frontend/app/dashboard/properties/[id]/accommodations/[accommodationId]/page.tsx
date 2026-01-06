@@ -32,7 +32,8 @@ const ACCOMMODATION_TYPES: Record<string, string> = {
 export default function AccommodationDetailPage() {
     const router = useRouter();
     const params = useParams();
-    const id = params.id as string;
+    const propertyId = params.id as string;
+    const accommodationId = params.accommodationId as string;
     const [accommodation, setAccommodation] = useState<Accommodation | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -45,12 +46,12 @@ export default function AccommodationDetailPage() {
         }
 
         fetchAccommodation(token);
-    }, [id, router]);
+    }, [accommodationId, router]);
 
     const fetchAccommodation = async (token: string) => {
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const response = await fetch(`${apiUrl}/api/v1/accommodations/${id}/`, {
+            const response = await fetch(`${apiUrl}/api/v1/accommodations/${accommodationId}/`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
@@ -77,7 +78,7 @@ export default function AccommodationDetailPage() {
         try {
             const token = localStorage.getItem('access_token');
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const response = await fetch(`${apiUrl}/api/v1/accommodations/${id}/`, {
+            const response = await fetch(`${apiUrl}/api/v1/accommodations/${accommodationId}/`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -88,7 +89,7 @@ export default function AccommodationDetailPage() {
                 throw new Error('Erro ao deletar acomodação');
             }
 
-            router.push('/dashboard/accommodations');
+            router.push(`/dashboard/properties/${propertyId}/accommodations`);
         } catch (err: any) {
             alert(err.message);
         }
@@ -112,7 +113,7 @@ export default function AccommodationDetailPage() {
                 <div className="max-w-4xl mx-auto">
                     <div className="glass-strong p-6 rounded-lg text-center">
                         <p className="text-error">{error || 'Acomodação não encontrada'}</p>
-                        <Link href="/dashboard/accommodations" className="text-primary hover:text-primary-hover mt-4 inline-block">
+                        <Link href={`/dashboard/properties/${propertyId}/accommodations`} className="text-primary hover:text-primary-hover mt-4 inline-block">
                             ← Voltar para acomodações
                         </Link>
                     </div>
@@ -126,7 +127,7 @@ export default function AccommodationDetailPage() {
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="mb-6">
-                    <Link href="/dashboard/accommodations" className="text-primary hover:text-primary-hover mb-4 inline-flex items-center gap-2">
+                    <Link href={`/dashboard/properties/${propertyId}/accommodations`} className="text-primary hover:text-primary-hover mb-4 inline-flex items-center gap-2">
                         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
@@ -223,7 +224,7 @@ export default function AccommodationDetailPage() {
                 {/* Actions */}
                 <div className="flex gap-4">
                     <Link
-                        href={`/dashboard/accommodations/${id}/edit`}
+                        href={`/dashboard/properties/${propertyId}/accommodations/${accommodationId}/edit`}
                         className="flex-1 text-center gradient-primary text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity"
                     >
                         Editar
