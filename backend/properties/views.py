@@ -14,7 +14,19 @@ class PropertyViewSet(viewsets.ModelViewSet):
     """
     ViewSet para CRUD de propriedades.
     
-    Apenas o owner pode ver e gerenciar suas propriedades.
+    Permite que proprietários gerenciem suas propriedades (pousadas, hotéis, casas de temporada).
+    
+    **Permissões:** Requer autenticação JWT.
+    
+    **Filtros:** Retorna apenas propriedades do usuário autenticado.
+    
+    **Operações:**
+    - `list`: Listar todas as propriedades do usuário
+    - `create`: Criar nova propriedade
+    - `retrieve`: Detalhes de uma propriedade específica
+    - `update`: Atualizar propriedade
+    - `partial_update`: Atualizar parcialmente
+    - `destroy`: Soft delete da propriedade
     """
     permission_classes = [IsAuthenticated]
     
@@ -43,9 +55,16 @@ class PropertyViewSet(viewsets.ModelViewSet):
 
 class PropertyPublicView(generics.RetrieveAPIView):
     """
-    Public view for property details (no authentication required).
+    Visualização pública de propriedade (sem autenticação).
     
-    Lookup by slug for SEO-friendly URLs.
+    Endpoint público para exibir informações da propriedade na landing page.
+    Não expõe dados sensíveis do proprietário.
+    
+    **Permissões:** Nenhuma (público)
+    
+    **Lookup:** Por slug (SEO-friendly)
+    
+    **Exemplo:** `/api/v1/public/properties/pousada-vista-linda/`
     """
     serializer_class = PropertyPublicSerializer
     permission_classes = []  # No authentication required
@@ -60,7 +79,20 @@ class AccommodationViewSet(viewsets.ModelViewSet):
     """
     ViewSet para CRUD de acomodações.
     
-    Apenas o owner da propriedade pode gerenciar.
+    Permite que proprietários gerenciem as acomodações (quartos, suítes, chalés)
+    dentro de suas propriedades.
+    
+    **Permissões:** Requer autenticação JWT.
+    
+    **Filtros:** Retorna apenas acomodações de propriedades do usuário.
+    
+    **Operações:**
+    - `list`: Listar todas as acomodações do usuário
+    - `create`: Criar nova acomodação
+    - `retrieve`: Detalhes de uma acomodação
+    - `update`: Atualizar acomodação
+    - `partial_update`: Atualizar parcialmente
+    - `destroy`: Soft delete da acomodação
     """
     permission_classes = [IsAuthenticated]
     serializer_class = AccommodationSerializer
