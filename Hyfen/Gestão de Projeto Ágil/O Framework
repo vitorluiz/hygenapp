@@ -1,0 +1,36 @@
+# O Framework de Gestão Ágil do Hyfen
+
+**Propósito:** Definir os rituais e ferramentas que usamos para gerenciar nosso projeto, garantindo um ritmo de trabalho proativo e previsível.
+
+---
+
+### 1. A Ferramenta: Quadro de Tarefas (Jira)
+
+*   **O que é:** Nossa fonte única da verdade para o gerenciamento do fluxo de trabalho.
+*   **Colunas do Quadro:**
+    1.  `BACKLOG`: Repositório de todas as ideias e tarefas futuras.
+    2.  `TO DO (Sprint Atual)`: Tarefas comprometidas para o sprint atual.
+    3.  `IN PROGRESS`: Tarefa em que um desenvolvedor está trabalhando ativamente.
+    4.  `IN REVIEW`: Tarefa aguardando revisão de código em um Pull Request.
+    5.  `DONE`: Tarefa concluída e integrada à `main`.
+
+### 2. Os Rituais (Nossas Reuniões)
+
+*   **Sprint Planning (Planejamento do Sprint):**
+    *   **Quando:** Início de cada sprint (ciclo de 2 semanas).
+    *   **Objetivo:** Decidir o que será construído. A equipe move tarefas do `BACKLOG` para `TO DO`.
+
+*   **Sprint Review & Demo (Revisão e Demonstração):**
+    *   **Quando:** Final de cada sprint.
+    *   **Objetivo:** A equipe demonstra as funcionalidades da coluna `DONE` para o Dono do Produto para validação e feedback.
+
+*   **Retrospective (Retrospectiva):**
+    *   **Quando:** Logo após a Sprint Review.
+    *   **Objetivo (Equipe Interna):** Discutir o que funcionou, o que não funcionou e como podemos melhorar nosso processo no próximo sprint.
+
+### 3. Regras de Ouro
+
+*   Nenhuma tarefa começa sem um card no Jira.
+*   Um desenvolvedor trabalha em uma tarefa de cada vez.
+*   Nenhum código vai para a `main` sem passar por um Pull Request (`IN REVIEW`).
+*   A coluna `DONE` é sagrada: só entra o que foi 100% concluído e integrado.

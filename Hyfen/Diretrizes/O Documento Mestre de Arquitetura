@@ -1,0 +1,51 @@
+# Documento Mestre de Arquitetura Hyfen (HAMD) v1.0
+
+**Arquiteto:** Jorge
+**Data:** 06/01/2026
+**Propósito:** Servir como a fonte única da verdade para a arquitetura e a evolução do sistema Hyfen, alinhando a visão de negócio com a implementação técnica.
+
+---
+
+### 1. Visão e Princípios Fundamentais
+
+*   **Visão de Negócio:** Democratizar a gestão de hospedagens para SMBs, oferecendo uma ferramenta poderosa, simples e que promova a independência do negócio do nosso cliente.
+*   **Princípios Arquitetônicos:**
+    1.  **Simplicidade e Clareza:** A solução mais simples e robusta prevalece.
+    2.  **Segurança como Fundamento:** Segurança é inegociável e integrada em todas as camadas.
+    3.  **Foco no Valor de Negócio:** A tecnologia serve à estratégia de negócio, não o contrário.
+    4.  **Arquitetura Evolutiva:** Construímos em fases sobre uma fundação que suporta o crescimento futuro.
+    5.  **Controle e Visibilidade:** O administrador do sistema e o dono da propriedade devem ter controle e visibilidade sobre seus respectivos domínios.
+
+### 2. Arquitetura de Acesso e Interfaces de Usuário
+
+| Interface | URL (Exemplo) | Usuários | Propósito | Tecnologia |
+| :--- | :--- | :--- | :--- | :--- |
+| **Painel de Super Admin** | `/admin` | Superusuário (Dono do Hyfen), Staff Hyfen | Gestão total da plataforma: clientes, auditoria, configurações globais, suporte. | **Django Admin** |
+| **Administração Geral** | `/dashboard` | Proprietário da Conta | Visão consolidada de **todas** as propriedades, métricas globais, gestão de faturamento e equipe. | **Next.js** |
+| **Painel de Administração** | `/properties/[id]` | Proprietário, Gerente, Funcionário | Gestão específica de **uma única** propriedade: acomodações, calendário, reservas, personalização. | **Next.js** |
+| **Landing Page Pública** | `/[slug]` ou domínio custom. | Hóspede (Público) | Vitrine da propriedade, consulta de disponibilidade e motor de reservas. | **Next.js** |
+
+### 3. Arquitetura de Controle de Acesso (Papéis e Permissões)
+
+*   **Modelo de Dados Central:** A relação entre um usuário e uma propriedade é mediada pelo modelo `PropertyAccess`.
+    *   `PropertyAccess` contém: `user` (ForeignKey), `property` (ForeignKey), `role` (CharField).
+*   **Hierarquia de Papéis (Roles) - Nível de Propriedade:**
+    *   `OWNER`: Criador da conta, pode gerenciar faturamento e equipe.
+    *   `MANAGER`: Convidado pelo `OWNER`, tem amplas permissões de gestão em propriedades específicas.
+    *   `STAFF`: Convidado, tem permissões limitadas (ex: apenas ver e criar reservas).
+*   **Lógica de Autorização:** Toda ação na API que modifica um recurso deve validar o `role` do usuário no `PropertyAccess` correspondente.
+
+### 4. Arquitetura de Módulos e Evolução Futura
+
+*   **Fase Core (Atual):**
+    *   `accounts`: Gestão de usuários e papéis.
+    *   `properties`: Gestão de propriedades, acomodações e personalização.
+    *   `bookings`: Motor de reservas e calendário.
+*   **Fase de Expansão (Futuro):**
+    *   `finances`: Módulo para o cliente gerenciar suas próprias finanças.
+    *   `inventory`: Módulo para controle de estoque.
+    *   `automations`: Módulo para criar regras e automações.
+    *   `concierge_ai`: Módulo para os agentes de IA.
+*   **Governança e Segurança (Módulos Transversais):**
+    *   **Controle de Sessão Única:** Será implementado para segurança da conta.
+    *   **Trilha de Auditoria (`Audit Trail`):** Será implementada para registrar todas as ações significativas.

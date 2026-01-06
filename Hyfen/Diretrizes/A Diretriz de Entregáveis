@@ -1,0 +1,33 @@
+# Diretriz de Entregáveis do Projeto Hyfen
+
+**Propósito:** Padronizar os entregáveis ao final de cada Sprint para garantir rastreabilidade, qualidade e comunicação eficiente.
+
+---
+
+Os entregáveis obrigatórios para a conclusão de um Sprint são:
+
+### 1. Código-Fonte (`Code`)
+
+*   **Onde:** Contido em uma `feature branch` no repositório Git.
+*   **Como:** Deve seguir as diretrizes de estilo, ser acompanhado de testes unitários e não conter segredos "hardcoded".
+
+### 2. Pull Request (PR)
+
+*   **Onde:** Na plataforma GitHub.
+*   **Como:**
+    *   **Título Claro:** `feat: [US-XXX] Breve descrição da funcionalidade`.
+    *   **Descrição Detalhada:** Deve conter um resumo, a lista de User Stories concluídas, instruções para teste e screenshots/GIFs da nova funcionalidade.
+    *   **Revisão:** Deve ser revisado e aprovado por outro membro da equipe.
+    *   **Verificações:** Deve passar em todas as verificações automáticas (GitGuardian, etc.).
+
+### 3. Documentação (`Documentation`)
+
+*   **Onde:** Dentro do diretório `/docs` do projeto.
+*   **Como:**
+    *   **Documentação de API:** A documentação gerada pelo `drf-spectacular` (Swagger) deve estar atualizada.
+    *   **Documentação de Arquitetura:** Decisões de arquitetura significativas devem ser documentadas.
+
+### 4. Relatório de Progresso do Sprint (`Sprint Report`)
+
+*   **Onde:** Mensagem, e-mail ou documento Markdown.
+*   **Como:** Deve conter a meta do sprint, a lista de User Stories concluídas (✅), uma demonstração do resultado e os problemas encontrados/resolvidos.

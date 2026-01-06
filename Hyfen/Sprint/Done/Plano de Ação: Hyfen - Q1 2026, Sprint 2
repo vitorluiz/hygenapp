@@ -1,0 +1,74 @@
+# Plano de Ação: Hyfen - Q1 2026, Sprint 2
+
+**Meta do Sprint:** Habilitar o fluxo completo de criação e visualização de uma propriedade, desde o dashboard do proprietário até a sua página pública (Landing Page). Ao final deste sprint, um proprietário poderá cadastrar um ativo e vê-lo publicado.
+
+---
+
+## Épico 5: Dashboard Funcional do Proprietário (MVP)
+
+*O objetivo é dar ao proprietário as ferramentas mínimas para gerenciar seus ativos.*
+
+*   **[US-5.1] Dashboard e Listagem de Propriedades**
+    *   **Como** um Proprietário, **após** fazer login, **eu quero** ser redirecionado para um dashboard onde eu possa ver uma lista das minhas propriedades cadastradas, **para que** eu tenha uma visão geral do meu portfólio.
+    *   **Critérios de Aceite:**
+        *   A página do dashboard no Next.js deve ser uma rota protegida.
+        *   Ao carregar, a página deve fazer uma chamada `GET` para o endpoint `/api/v0/properties/`.
+        *   A lista de propriedades retornada pela API deve ser exibida na tela.
+        *   Se nenhuma propriedade existir, uma mensagem amigável ("Você ainda não cadastrou nenhuma propriedade.") deve ser mostrada.
+
+*   **[US-5.2] Formulário de Criação de Propriedade**
+    *   **Como** um Proprietário, **eu quero** ter um botão "Adicionar Nova Propriedade" no meu dashboard que me leve para um formulário, **para que** eu possa iniciar o cadastro de um novo ativo.
+    *   **Critérios de Aceite:**
+        *   Um botão claro e visível deve existir na página do dashboard.
+        *   Ao clicar, o usuário deve ser levado para uma nova página (ex: `/dashboard/properties/new`).
+        *   Esta página deve conter um formulário com os campos básicos para o cadastro de uma propriedade (Nome, Endereço, Tipo, Descrição, etc.).
+
+*   **[US-5.3] Submissão e Criação da Propriedade**
+    *   **Como** um Proprietário, **eu quero** preencher e submeter o formulário de nova propriedade, **para que** a propriedade seja criada no sistema e apareça no meu dashboard.
+    *   **Critérios de Aceite:**
+        *   Ao submeter o formulário, uma chamada `POST` deve ser feita para `/api/v0/properties/` com os dados do formulário.
+        *   Após a criação bem-sucedida, o usuário deve ser redirecionado de volta para a lista de propriedades no dashboard.
+        *   A propriedade recém-criada deve aparecer na lista.
+
+---
+
+## Épico 6: A Vitrine Pública (Landing Page)
+
+*O objetivo é criar a "loja" do nosso cliente, a página que o hóspede final irá visitar.*
+
+*   **[US-6.1] Página Pública da Propriedade**
+    *   **Como** um Hóspede, **eu quero** poder acessar uma URL pública (ex: `/public/hostel-vida`) e ver as informações detalhadas de uma propriedade, **para que** eu possa decidir se quero me hospedar lá.
+    *   **Critérios de Aceite:**
+        *   O Frontend (Next.js) deve ter uma rota dinâmica (ex: `app/public/[slug]/page.tsx`).
+        *   A página deve buscar os dados da propriedade fazendo uma chamada para um novo endpoint público da API: `GET /api/v0/public/properties/{slug}`.
+        *   As informações da propriedade (fotos, descrição, comodidades) devem ser exibidas de forma clara e atraente.
+
+*   **[US-6.2] Endpoint Público Seguro**
+    *   **Como** um Arquiteto, **eu quero** que o endpoint público da API (`/api/v0/public/properties/{slug}`) seja otimizado e não exponha dados sensíveis, **para** garantir a segurança e a privacidade do proprietário.
+    *   **Critérios de Aceite:**
+        *   O endpoint deve ser acessível sem autenticação.
+        *   A resposta JSON **não** deve incluir informações como o e-mail do proprietário, dados financeiros ou status interno.
+        *   O endpoint deve ser eficiente, buscando apenas os dados necessários para a exibição pública.
+
+---
+
+## Épico 7: Documentação e Qualidade de Vida
+
+*O objetivo é continuar construindo um projeto sustentável.*
+
+*   **[US-7.1] Estruturação da Documentação do Projeto**
+    *   **Como** um Desenvolvedor, **eu quero** um site de documentação para o projeto (usando MkDocs), **para que** eu possa encontrar informações de arquitetura e guias de setup de forma centralizada.
+    *   **Critérios de Aceite:**
+        *   Um diretório `/docs` é criado na raiz do projeto.
+        *   O MkDocs e o tema Material for MkDocs são adicionados como dependências de desenvolvimento.
+        *   Os documentos de arquitetura existentes são movidos para o diretório `/docs`.
+        *   A documentação pode ser servida localmente através de um comando.
+
+---
+
+### Critérios de Sucesso para o Sprint 2
+
+1.  Um usuário proprietário consegue fazer login, acessar um dashboard e ver uma lista (inicialmente vazia) de propriedades.
+2.  O proprietário consegue preencher um formulário e criar uma nova propriedade com sucesso. A nova propriedade aparece na lista do dashboard.
+3.  É possível acessar uma URL pública e visualizar os detalhes da propriedade recém-criada.
+4.  O site de documentação inicial está no ar (localmente) e contém as diretrizes de arquitetura.
