@@ -50,3 +50,24 @@ class AccommodationAdmin(admin.ModelAdmin):
     )
     
     readonly_fields = ["deleted_at"]
+
+
+@admin.register(Image)
+class ImageAdmin(admin.ModelAdmin):
+    list_display = ['id', 'property', 'accommodation', 'caption', 'order', 'created_at']
+    list_filter = ['created_at']
+    search_fields = ['caption', 'property__name', 'accommodation__name']
+    readonly_fields = ['created_at', 'updated_at']
+
+
+@admin.register(PropertyAccess)
+class PropertyAccessAdmin(admin.ModelAdmin):
+    """Admin para gerenciar acessos de usuários a propriedades"""
+    list_display = ['user', 'property', 'role', 'created_at']
+    list_filter = ['role', 'created_at']
+    search_fields = ['user__email', 'property__name']
+    readonly_fields = ['created_at']
+    
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related('user', 'property')

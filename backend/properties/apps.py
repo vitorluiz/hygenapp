@@ -7,3 +7,4 @@ class PropertiesConfig(AppConfig):
     
     def ready(self):
         import properties.signals  # Registra os signals
+        import properties.auditlog  # Registra auditoria

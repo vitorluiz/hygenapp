@@ -81,6 +81,15 @@
 **Meta do Sprint:** Implementar a fundação do controle de acesso por propriedade e habilitar a gestão detalhada (acomodações, personalização) dentro do contexto de uma propriedade específica.
 
 ---
+## Épico 12 (NOVO): Governança e Segurança da Plataforma
+
+*   **[US-12.1] Implementação da Trilha de Auditoria**
+    *   **Como** um Administrador do Sistema, **eu quero** que todas as ações de criação, atualização e exclusão nos modelos principais (User, Property, Accommodation, Booking) sejam registradas, **para que** eu tenha uma trilha de auditoria completa de quem fez o quê e quando.
+    *   **Critérios de Aceite:**
+        *   A biblioteca `django-auditlog` é instalada e configurada.
+        *   Os modelos `Property`, `Accommodation` e o modelo de `User` são registrados para auditoria.
+        *   Ao criar uma nova propriedade através da API, um registro correspondente aparece na seção "Audit Log" do Django Admin.
+
 
 ## Épico 11: Fundação de Controle de Acesso e Gestão por Propriedade
 

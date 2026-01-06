@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'drf_spectacular',
+    'auditlog',
     # Local apps
     'accounts.apps.AccountsConfig',
     'properties.apps.PropertiesConfig',
