@@ -1,13 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-
-interface Property {
-    id: string;
-    name: string;
-}
 
 const ACCOMMODATION_TYPES = [
     { value: 'room', label: 'Quarto' },
@@ -20,12 +15,13 @@ const ACCOMMODATION_TYPES = [
 
 export default function NewAccommodationPage() {
     const router = useRouter();
-    const [properties, setProperties] = useState<Property[]>([]);
+    const params = useParams();
+    const propertyId = params.id as string;
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
     const [formData, setFormData] = useState({
-        property: '',
+        property: propertyId,
         name: '',
         description: '',
         accommodation_type: 'room',
@@ -42,35 +38,7 @@ export default function NewAccommodationPage() {
             router.push('/login');
             return;
         }
-
-        fetchProperties(token);
     }, [router]);
-
-    const fetchProperties = async (token: string) => {
-        try {
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const response = await fetch(`${apiUrl}/api/v1/properties/`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error('Erro ao carregar propriedades');
-            }
-
-            const data = await response.json();
-            const propertiesList = data.results || data;
-            setProperties(propertiesList);
-
-            // Auto-select first property if available
-            if (propertiesList.length > 0) {
-                setFormData(prev => ({ ...prev, property: propertiesList[0].id }));
-            }
-        } catch (err: any) {
-            setError(err.message);
-        }
-    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -100,7 +68,7 @@ export default function NewAccommodationPage() {
                 throw new Error(errorData.detail || 'Erro ao criar acomodação');
             }
 
-            router.push('/dashboard/accommodations');
+            router.push(`/dashboard/properties/${propertyId}/accommodations`);
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -108,33 +76,12 @@ export default function NewAccommodationPage() {
         }
     };
 
-    if (properties.length === 0 && !error) {
-        return (
-            <div className="min-h-screen p-8">
-                <div className="max-w-2xl mx-auto">
-                    <div className="glass-strong p-8 rounded-lg text-center">
-                        <h3 className="text-2xl font-semibold mb-2">Nenhuma propriedade cadastrada</h3>
-                        <p className="text-text-secondary mb-6">
-                            Você precisa cadastrar uma propriedade antes de criar acomodações.
-                        </p>
-                        <Link
-                            href="/dashboard/properties/new"
-                            className="gradient-primary text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity shadow-glow inline-flex items-center gap-2"
-                        >
-                            Cadastrar Propriedade
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="min-h-screen p-8">
             <div className="max-w-2xl mx-auto">
                 {/* Header */}
                 <div className="mb-6">
-                    <Link href="/dashboard/accommodations" className="text-primary hover:text-primary-hover mb-4 inline-flex items-center gap-2">
+                    <Link href={`/dashboard/properties/${propertyId}/accommodations`} className="text-primary hover:text-primary-hover mb-4 inline-flex items-center gap-2">
                         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
@@ -151,26 +98,6 @@ export default function NewAccommodationPage() {
                             {error}
                         </div>
                     )}
-
-                    {/* Property Selection */}
-                    <div>
-                        <label className="block text-sm font-medium mb-2">
-                            Propriedade <span className="text-error">*</span>
-                        </label>
-                        <select
-                            name="property"
-                            value={formData.property}
-                            onChange={handleChange}
-                            required
-                            className="w-full px-4 py-3 rounded-lg glass border border-border focus:border-primary focus:outline-none transition-colors"
-                        >
-                            {properties.map(property => (
-                                <option key={property.id} value={property.id}>
-                                    {property.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
 
                     {/* Basic Info */}
                     <div>
@@ -310,7 +237,7 @@ export default function NewAccommodationPage() {
                     {/* Submit */}
                     <div className="flex gap-4 pt-4">
                         <Link
-                            href="/dashboard/accommodations"
+                            href={`/dashboard/properties/${propertyId}/accommodations`}
                             className="flex-1 text-center py-3 px-6 rounded-lg glass hover:glass-strong transition-all font-medium"
                         >
                             Cancelar

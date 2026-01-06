@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 
 interface Accommodation {
@@ -15,6 +15,11 @@ interface Accommodation {
     images_count: number;
 }
 
+interface Property {
+    id: string;
+    name: string;
+}
+
 const ACCOMMODATION_TYPES: Record<string, string> = {
     'room': 'Quarto',
     'suite': 'Suíte',
@@ -24,8 +29,11 @@ const ACCOMMODATION_TYPES: Record<string, string> = {
     'other': 'Outro',
 };
 
-export default function AccommodationsPage() {
+export default function PropertyAccommodationsPage() {
     const router = useRouter();
+    const params = useParams();
+    const propertyId = params.id as string;
+    const [property, setProperty] = useState<Property | null>(null);
     const [accommodations, setAccommodations] = useState<Accommodation[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -37,13 +45,34 @@ export default function AccommodationsPage() {
             return;
         }
 
+        fetchProperty(token);
         fetchAccommodations(token);
-    }, [router]);
+    }, [propertyId, router]);
+
+    const fetchProperty = async (token: string) => {
+        try {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+            const response = await fetch(`${apiUrl}/api/v1/properties/${propertyId}/`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro ao carregar propriedade');
+            }
+
+            const data = await response.json();
+            setProperty(data);
+        } catch (err: any) {
+            setError(err.message);
+        }
+    };
 
     const fetchAccommodations = async (token: string) => {
         try {
             const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-            const response = await fetch(`${apiUrl}/api/v1/accommodations/`, {
+            const response = await fetch(`${apiUrl}/api/v1/accommodations/by_property/?property_id=${propertyId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 },
@@ -54,7 +83,7 @@ export default function AccommodationsPage() {
             }
 
             const data = await response.json();
-            setAccommodations(data.results || data);
+            setAccommodations(data);
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -68,11 +97,17 @@ export default function AccommodationsPage() {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8">
                     <div>
+                        <Link href={`/dashboard/properties/${propertyId}`} className="text-primary hover:text-primary-hover mb-2 inline-flex items-center gap-2">
+                            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            Voltar à Propriedade
+                        </Link>
                         <h1 className="text-3xl font-bold gradient-text mb-2">Acomodações</h1>
-                        <p className="text-text-secondary">Gerencie todas as suas acomodações</p>
+                        <p className="text-text-secondary">{property?.name || 'Carregando...'}</p>
                     </div>
                     <Link
-                        href="/dashboard/accommodations/new"
+                        href={`/dashboard/properties/${propertyId}/accommodations/new`}
                         className="gradient-primary text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity shadow-glow inline-flex items-center gap-2"
                     >
                         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -102,7 +137,6 @@ export default function AccommodationsPage() {
                                 <div className="flex items-start justify-between mb-4">
                                     <div>
                                         <h3 className="text-lg font-semibold mb-1">{accommodation.name}</h3>
-                                        <p className="text-text-secondary text-sm">{accommodation.property_name}</p>
                                     </div>
                                     <span className="px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
                                         {ACCOMMODATION_TYPES[accommodation.accommodation_type] || accommodation.accommodation_type}
@@ -130,7 +164,7 @@ export default function AccommodationsPage() {
                                         <p className="text-text-muted text-xs">por noite</p>
                                     </div>
                                     <Link
-                                        href={`/dashboard/accommodations/${accommodation.id}`}
+                                        href={`/dashboard/properties/${propertyId}/accommodations/${accommodation.id}`}
                                         className="text-primary hover:text-primary-hover font-medium text-sm"
                                     >
                                         Ver detalhes →
@@ -148,10 +182,10 @@ export default function AccommodationsPage() {
                         </div>
                         <h3 className="text-2xl font-semibold mb-2">Nenhuma acomodação cadastrada</h3>
                         <p className="text-text-secondary mb-6">
-                            Comece cadastrando suas primeiras acomodações para gerenciar suas hospedagens.
+                            Comece cadastrando as acomodações desta propriedade.
                         </p>
                         <Link
-                            href="/dashboard/accommodations/new"
+                            href={`/dashboard/properties/${propertyId}/accommodations/new`}
                             className="gradient-primary text-white font-semibold py-3 px-6 rounded-lg hover:opacity-90 transition-opacity shadow-glow inline-flex items-center gap-2"
                         >
                             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
