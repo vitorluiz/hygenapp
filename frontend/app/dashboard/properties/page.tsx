@@ -41,13 +41,24 @@ export default function PropertiesPage() {
                 },
             });
 
+            if (response.status === 401) {
+                // Token expirado - redirecionar para login
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+                localStorage.removeItem('user');
+                router.push('/login');
+                return;
+            }
+
             if (!response.ok) {
-                throw new Error('Erro ao carregar propriedades');
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.detail || 'Erro ao carregar propriedades');
             }
 
             const data = await response.json();
             setProperties(data.results || data);
         } catch (err: any) {
+            console.error('Erro ao buscar propriedades:', err);
             setError(err.message);
         } finally {
             setLoading(false);
